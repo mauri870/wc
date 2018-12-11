@@ -57,6 +57,7 @@ fn main() {
                     cc += str::from_utf8_mut(&mut buffer[0..len])
                         .unwrap()
                         .chars()
+                        .filter(|c| c.is_ascii())
                         .count()
                 } else if byte_count_flag {
                     bc += len

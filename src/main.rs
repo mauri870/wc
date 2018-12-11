@@ -78,21 +78,15 @@ fn main() {
         }
     }
 
-    if word_count_flag {
-        print!("{} ", word_count);
-    }
+    let print_count = |count: usize, should_print: bool| {
+        if should_print {
+            print!("{} ", count);
+        }
+    };
 
-    if char_count_flag {
-        print!("{} ", char_count);
-    }
-
-    if byte_count_flag {
-        print!("{} ", byte_count);
-    }
-
-    if line_count_flag {
-        print!("{} ", line_count);
-    }
-
+    print_count(word_count, word_count_flag);
+    print_count(char_count, char_count_flag);
+    print_count(byte_count, byte_count_flag);
+    print_count(line_count, line_count_flag);
     println!();
 }

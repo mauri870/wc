@@ -36,7 +36,8 @@ fn main() {
         ap.parse_args_or_exit();
     }
 
-    let (mut wc, mut cc, mut bc, mut lc) = (0usize, 0usize, 0usize, 0usize);
+    let (mut word_count, mut char_count, mut byte_count, mut line_count) =
+        (0usize, 0usize, 0usize, 0usize);
     let mut buffer = [0u8; 1024];
     let stdin = io::stdin();
     let mut stdin = stdin.lock();
@@ -48,21 +49,27 @@ fn main() {
             }
             Ok(len) => {
                 if word_count_flag {
-                    wc += str::from_utf8_mut(&mut buffer[0..len])
+                    word_count += str::from_utf8_mut(&mut buffer[0..len])
                         .unwrap()
                         .split(" ")
                         .filter(|&s| !s.is_empty() && s != "\t" && s != "\n")
                         .count();
-                } else if char_count_flag {
-                    cc += str::from_utf8_mut(&mut buffer[0..len])
+                }
+
+                if char_count_flag {
+                    char_count += str::from_utf8_mut(&mut buffer[0..len])
                         .unwrap()
                         .chars()
                         .filter(|c| c.is_ascii())
                         .count()
-                } else if byte_count_flag {
-                    bc += len
-                } else if line_count_flag {
-                    lc += buffer[0..len].into_iter().filter(|&&b| b == b'\n').count();
+                }
+
+                if byte_count_flag {
+                    byte_count += len
+                }
+
+                if line_count_flag {
+                    line_count += buffer[0..len].into_iter().filter(|&&b| b == b'\n').count();
                 }
             }
             Err(err) => {
@@ -72,12 +79,20 @@ fn main() {
     }
 
     if word_count_flag {
-        println!("{}", wc);
-    } else if char_count_flag {
-        println!("{}", cc);
-    } else if byte_count_flag {
-        println!("{}", bc);
-    } else if line_count_flag {
-        println!("{}", lc);
+        print!("{} ", word_count);
     }
+
+    if char_count_flag {
+        print!("{} ", char_count);
+    }
+
+    if byte_count_flag {
+        print!("{} ", byte_count);
+    }
+
+    if line_count_flag {
+        print!("{} ", line_count);
+    }
+
+    println!();
 }

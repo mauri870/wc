@@ -51,6 +51,7 @@ fn main() {
                     wc += str::from_utf8_mut(&mut buffer[0..len])
                         .unwrap()
                         .split(" ")
+                        .filter(|&s| s != "\t" && s != "\n")
                         .count();
                 } else if char_count_flag {
                     cc += str::from_utf8_mut(&mut buffer[0..len])

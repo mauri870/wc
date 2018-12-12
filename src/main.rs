@@ -54,7 +54,6 @@ fn main() {
                     word_count += str::from_utf8_mut(&mut buffer[0..len])
                         .unwrap()
                         .split_ascii_whitespace()
-                        .filter(|&s| !s.is_empty() && s != "\t" && s != "\n")
                         .count();
                 }
 

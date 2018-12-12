@@ -1,3 +1,5 @@
+#![feature(split_ascii_whitespace)]
+
 extern crate argparse;
 
 use argparse::{ArgumentParser, StoreTrue};
@@ -51,7 +53,7 @@ fn main() {
                 if word_count_flag {
                     word_count += str::from_utf8_mut(&mut buffer[0..len])
                         .unwrap()
-                        .split(" ")
+                        .split_ascii_whitespace()
                         .filter(|&s| !s.is_empty() && s != "\t" && s != "\n")
                         .count();
                 }
@@ -60,7 +62,6 @@ fn main() {
                     char_count += str::from_utf8_mut(&mut buffer[0..len])
                         .unwrap()
                         .chars()
-                        .filter(|c| c.is_ascii())
                         .count()
                 }
 
@@ -84,9 +85,9 @@ fn main() {
         }
     };
 
+    print_count(line_count, line_count_flag);
     print_count(word_count, word_count_flag);
     print_count(char_count, char_count_flag);
     print_count(byte_count, byte_count_flag);
-    print_count(line_count, line_count_flag);
     println!();
 }

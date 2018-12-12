@@ -3,7 +3,7 @@
 extern crate argparse;
 
 use argparse::{ArgumentParser, StoreTrue};
-use std::io::{self, Read};
+use std::io::{self, BufRead};
 use std::str;
 
 fn main() {
@@ -40,37 +40,39 @@ fn main() {
 
     let (mut word_count, mut char_count, mut byte_count, mut line_count) =
         (0usize, 0usize, 0usize, 0usize);
-    let mut buffer = [0u8; 1024];
+    let mut buffer = Vec::new();
     let stdin = io::stdin();
     let mut stdin = stdin.lock();
 
     loop {
-        match stdin.read(&mut buffer) {
+        match stdin.read_until(b'\n', &mut buffer) {
             Ok(0) => {
                 break;
             }
             Ok(len) => {
                 if word_count_flag {
-                    word_count += str::from_utf8_mut(&mut buffer[0..len])
+                    word_count += str::from_utf8(&buffer)
                         .unwrap()
                         .split_ascii_whitespace()
                         .count();
                 }
 
                 if char_count_flag {
-                    char_count += str::from_utf8_mut(&mut buffer[0..len])
+                    char_count += str::from_utf8(&buffer)
                         .unwrap()
                         .chars()
-                        .count()
+                        .count();
                 }
 
                 if byte_count_flag {
-                    byte_count += len
+                    byte_count += len;
                 }
 
                 if line_count_flag {
-                    line_count += buffer[0..len].into_iter().filter(|&&b| b == b'\n').count();
+                    line_count += 1;
                 }
+
+                buffer.clear();
             }
             Err(err) => {
                 panic!("{}", err);
